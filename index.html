@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="img/flowers.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Flores para você</title>
+
+    <style>
+        /* ===================================================== */
+        /* PALETA PADRONIZADA */
+        /* ===================================================== */
+        :root {
+            --rose-900: #7a2e4d;   /* texto principal / títulos */
+            --rose-700: #b23764;   /* acento primário (botões, links) */
+            --rose-600: #c94b78;   /* hover do acento primário */
+            --rose-200: #f3c9dc;   /* bordas suaves, foco */
+            --rose-100: #fbe4ee;   /* fundo do card / campos */
+            --rose-050: #fff3f8;   /* fundo mais claro do gradiente */
+            --blush-bg-start: #fff6fa;
+            --blush-bg-end: #fbdce9;
+            --neutral-white: #ffffff;
+            --neutral-ink: #4a2c3d; /* texto secundário */
+            --neutral-muted: #8a6b78;
+            --danger: #c0392b;
+            --shadow: rgba(122, 46, 77, 0.18);
+        }
+
+        /* Classe essencial para esconder o texto apenas visualmente,
+           mantendo-o legível para leitores de tela */
+        .sr-only {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            padding: 0 !important;
+            margin: -1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            border: 0 !important;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            font-family: 'Nunito Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, var(--blush-bg-start), var(--blush-bg-end));
+            color: var(--neutral-ink);
+        }
+
+        .container {
+            max-width: 640px;
+            width: 90%;
+            padding: 48px 36px;
+            background: var(--neutral-white);
+            border-radius: 24px;
+            box-shadow: 0 20px 45px var(--shadow);
+        }
+
+        .greetings {
+            font-family: 'Cormorant Garamond', 'Segoe UI', serif;
+            font-weight: 700;
+            font-size: clamp(2.2rem, 6vw, 3.2rem);
+            letter-spacing: 0.08em;
+            color: var(--rose-900);
+            margin: 0 0 18px;
+        }
+
+        .description {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--neutral-muted);
+            margin: 0 0 8px;
+        }
+
+        .button-wrapper {
+            margin-top: 34px;
+        }
+
+        .botones {
+            border: none;
+            cursor: pointer;
+            background-color: var(--rose-700);
+            color: var(--neutral-white);
+            padding: 14px 32px;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            box-shadow: 0 10px 24px var(--shadow);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .botones:hover {
+            background-color: var(--rose-600);
+            transform: translateY(-2px);
+        }
+
+        .botones:focus-visible {
+            outline: 3px solid var(--rose-200);
+            outline-offset: 3px;
+        }
+
+        .footer {
+            margin-top: 28px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+            color: var(--neutral-muted);
+        }
+
+        /* ===================================================== */
+        /* MODAL DE SENHA */
+        /* ===================================================== */
+        #modalSenha {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(122, 46, 77, 0.45);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #modalSenha.active {
+            display: flex !important;
+        }
+
+        .modal-card {
+            background-color: var(--neutral-white);
+            padding: 40px 30px;
+            border-radius: 20px;
+            max-width: 350px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--shadow);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-card h2 {
+            margin-top: 0;
+            color: var(--rose-700);
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 1.3rem;
+        }
+
+        #campoSenha {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--rose-200);
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        #campoSenha:focus {
+            border-color: var(--rose-700);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .modal-actions button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: inherit;
+            transition: transform 0.15s ease;
+        }
+
+        .modal-actions button:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-cancelar {
+            background-color: var(--rose-100);
+            color: var(--rose-900);
+        }
+
+        .btn-entrar {
+            background-color: var(--rose-700);
+            color: var(--neutral-white);
+        }
+
+        #mensagemErro {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 15px;
+            height: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <!-- Título principal -->
+        <h1 class="greetings" aria-label="Olá meu bem">
+            <span class="sr-only">Olá meu bem</span>
+            <span aria-hidden="true">OLÁ MEU BEM</span>
+        </h1>
+
+        <p class="description">
+            <span>✨ Este presente foi feito com carinho para alegrar o seu dia! ✨</span>
+        </p>
+
+        <!-- Botão que abre o modal de senha -->
+        <div class="button-wrapper">
+            <button onclick="abrirModal()" class="botones">
+                💐 Clique aqui para abrir
+            </button>
+        </div>
+
+        <footer class="footer">
+            <p>Com muito carinho, para você. 🌷</p>
+        </footer>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL DE SENHA -->
+    <!-- ========================================== -->
+    <div id="modalSenha">
+        <div class="modal-card">
+            <h2>🔐 Digite a senha</h2>
+
+            <input type="password" id="campoSenha" placeholder="Digite aqui...">
+
+            <div class="modal-actions">
+                <button onclick="fecharModal()" class="btn-cancelar">Cancelar</button>
+                <button onclick="verificarSenhaModal()" class="btn-entrar">Entrar 🌷</button>
+            </div>
+
+            <p id="mensagemErro"></p>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT DO MODAL -->
+    <!-- ========================================== -->
+    <script>
+        // 🔑 MUDE A SENHA AQUI (a que a pessoa precisa digitar)
+        const SENHA_SECRETA = "xuxu";
+
+        function abrirModal() {
+            document.getElementById('modalSenha').classList.add('active');
+            document.getElementById('campoSenha').value = ''; // Limpa o campo
+            document.getElementById('mensagemErro').innerHTML = ''; // Limpa erro
+            document.getElementById('campoSenha').focus(); // Foca no input
+        }
+
+        function fecharModal() {
+            document.getElementById('modalSenha').classList.remove('active');
+        }
+
+        function verificarSenhaModal() {
+            const input = document.getElementById('campoSenha').value;
+            const erro = document.getElementById('mensagemErro');
+
+            if (input === SENHA_SECRETA) {
+                // Senha correta! Redireciona.
+                window.location.href = "flower.html";
+            } else {
+                // Senha errada!
+                erro.innerHTML = '❌ Senha incorreta! Tente de novo.';
+                document.getElementById('campoSenha').value = '';
+                document.getElementById('campoSenha').focus();
+            }
+        }
+
+        // Permite apertar a tecla "Enter" dentro do campo de senha
+        document.getElementById('campoSenha').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                verificarSenhaModal();
+            }
+        });
+
+        // Clica fora do modal (no fundo escuro) para fechar
+        document.getElementById('modalSenha').addEventListener('click', function (e) {
+            if (e.target === this) {
+                fecharModal();
+            }
+        });
+    </script>
+</body>
+
+</html>
